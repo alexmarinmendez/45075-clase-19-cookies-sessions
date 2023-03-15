@@ -3,7 +3,7 @@ import cookieParser from 'cookie-parser'
 
 const app = express()
 
-app.use(cookieParser())
+app.use(cookieParser('c0d3r'))
 
 app.get('/preference', (req, res) => {
     let preference = {
@@ -11,12 +11,12 @@ app.get('/preference', (req, res) => {
         mode: 'dark',
         login: true
     }
-    res.cookie('preference', JSON.stringify(preference)).send('Configuraciones guardadas con éxito.')
+    res.cookie('preference', JSON.stringify(preference), {signed: true}).send('Configuraciones guardadas con éxito.')
 })
 
 app.get('/control-panel', (req, res) => {
-    if (req.cookies.preference) {
-        let preference = JSON.parse(req.cookies.preference)
+    if (req.signedCookies.preference) {
+        let preference = JSON.parse(req.signedCookies.preference)
         res.send(`Bienvenido de vuelta. Tus configuraciones son: MODE=${preference.mode} LANGUAGE=${preference.language}`)
     } else {
         res.send('No estas logueado.')
